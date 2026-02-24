@@ -83,6 +83,11 @@
       font-size: 0.85rem;
     }
 
+    .slider-value {
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
     .result {
       background: var(--success-bg);
       border: 1px solid #c9f2ff;
@@ -162,9 +167,15 @@
         <div>
           <label for="customDays">Optional custom days</label>
           <input id="customDays" type="number" min="1" step="1" placeholder="Leave blank to use category days" />
-          <p class="hint">Estimate updates automatically as you change values.</p>
+        </div>
+
+        <div>
+          <label for="fineTune">Fine-tune estimate feel (<span id="fineTuneValue" class="slider-value">100%</span>)</label>
+          <input id="fineTune" type="range" min="70" max="130" step="1" value="100" aria-label="Fine tune estimate" />
+          <p class="hint">Lower for conservative spending, higher for pricier expectations.</p>
         </div>
       </div>
+      <p class="hint">Estimate updates automatically as you change values.</p>
     </section>
 
     <section class="card result" id="result" aria-live="polite">
@@ -213,6 +224,8 @@
     const budgetLevelInput = document.getElementById('budgetLevel');
     const peopleInput = document.getElementById('people');
     const customDaysInput = document.getElementById('customDays');
+    const fineTuneInput = document.getElementById('fineTune');
+    const fineTuneValueEl = document.getElementById('fineTuneValue');
     const estimateEl = document.getElementById('estimate');
     const breakdownEl = document.getElementById('breakdown');
     const assumptionTable = document.getElementById('assumptionTable');
@@ -268,7 +281,11 @@
       const budget = Number(budgetLevelInput.value);
       const tripMultiplier = Number(tripTypeInput.value);
 
-      const estimate = days * tripMultiplier * budget * people;
+      const fineTunePercent = Number(fineTuneInput.value);
+      const fineTuneFactor = fineTunePercent / 100;
+      fineTuneValueEl.textContent = `${fineTunePercent}%`;
+
+      const estimate = days * tripMultiplier * budget * people * fineTuneFactor;
       const roundedEstimate = Math.round(estimate / 10) * 10;
 
       estimateEl.textContent = roundedEstimate.toLocaleString('en-US', {
@@ -277,14 +294,14 @@
         maximumFractionDigits: 0
       });
 
-      breakdownEl.textContent = `${days} day(s) × ${tripLabel} (${tripMultiplier.toFixed(2)}) × ${budgetLabel} ($${budget}/person/day) × ${people} people`;
+      breakdownEl.textContent = `${days} day(s) × ${tripLabel} (${tripMultiplier.toFixed(2)}) × ${budgetLabel} ($${budget}/person/day) × ${people} people × feel adjustment (${fineTunePercent}%)`;
     }
 
     fillSelect(tripTypeInput, tripMultipliers);
     fillSelect(budgetLevelInput, budgetBase);
     fillAssumptions();
 
-    [durationInput, tripTypeInput, budgetLevelInput, peopleInput, customDaysInput].forEach((input) => {
+    [durationInput, tripTypeInput, budgetLevelInput, peopleInput, customDaysInput, fineTuneInput].forEach((input) => {
       input.addEventListener('input', calculate);
       input.addEventListener('change', calculate);
     });
