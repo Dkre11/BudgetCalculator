@@ -60,6 +60,10 @@
       align-items: end;
     }
 
+    .spacer-top {
+      margin-top: 0.9rem;
+    }
+
     label {
       display: block;
       font-weight: 600;
@@ -86,6 +90,15 @@
     .slider-value {
       font-weight: 700;
       color: var(--accent-2);
+    }
+
+    .assumptions-wrap {
+      overflow-x: auto;
+    }
+
+    .section-title {
+      margin-top: 0;
+      font-size: 1.2rem;
     }
 
     .result {
@@ -121,6 +134,36 @@
       font-size: 0.82rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem 0.65rem;
+      }
+
+      .card {
+        padding: 1rem;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+
+      select,
+      input {
+        font-size: 16px;
+      }
+
+      th,
+      td {
+        padding: 0.5rem 0.4rem;
+      }
     }
   </style>
 </head>
@@ -163,7 +206,7 @@
         </div>
       </div>
 
-      <div class="grid" style="margin-top: 0.9rem;">
+      <div class="grid spacer-top">
         <div>
           <label for="customDays">Optional custom days</label>
           <input id="customDays" type="number" min="1" step="1" placeholder="Leave blank to use category days" />
@@ -185,18 +228,20 @@
     </section>
 
     <section class="card">
-      <h2 style="margin-top: 0; font-size: 1.2rem;">Model Assumptions</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Budget level</th>
-            <th>Base $/person/day</th>
-            <th>Trip type</th>
-            <th>Multiplier</th>
-          </tr>
-        </thead>
-        <tbody id="assumptionTable"></tbody>
-      </table>
+      <h2 class="section-title">Model Assumptions</h2>
+      <div class="assumptions-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Budget level</th>
+              <th>Base $/person/day</th>
+              <th>Trip type</th>
+              <th>Multiplier</th>
+            </tr>
+          </thead>
+          <tbody id="assumptionTable"></tbody>
+        </table>
+      </div>
     </section>
   </main>
 
